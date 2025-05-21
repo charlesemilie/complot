@@ -15,3 +15,8 @@ def health():
 @app.get("/")
 def root():
     return {"status": "alive"}
+
+# Autoriser la méthode HEAD sur la racine pour éviter 405
+@app.head("/")
+def root_head():
+    return {"status": "alive"}
