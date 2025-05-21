@@ -4,36 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complots 2 Online</title>
-    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .actions-container, .players-container, .treasury-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            min-width: 300px;
+        }
+        button { margin: 5px; padding: 10px; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Complots 2 Online</h1>
-    </header>
 
-    <main>
-        <section id="game-status">
-            <h2>État du jeu</h2>
-            <div id="players"></div>
-            <p>Trésor : <span id="treasury">0</span> Or</p>
-        </section>
+    <h1>Complots 2 Online</h1>
 
-        <section id="player-actions">
-            <h2>Vos Actions</h2>
-            <button onclick="actionRevenu()">Revenu (+1 Or)</button>
-            <button onclick="actionAideEtrangere()">Aide Étrangère (+2 Or)</button>
-            <button onclick="actionAssassinat()">Assassinat (-7 Or)</button>
-            <button onclick="actionPouvoir()">Activer un Pouvoir</button>
-        </section>
+    <!-- Affichage du trésor -->
+    <div class="treasury-container">
+        <h2>Trésor</h2>
+        <p id="treasury">Chargement...</p>
+    </div>
 
-        <section id="chat">
-            <h2>Discussion</h2>
-            <ul id="messages"></ul>
-            <input type="text" id="messageInput" placeholder="Envoyer un message">
-            <button onclick="sendMessage()">Envoyer</button>
-        </section>
-    </main>
+    <!-- Affichage des joueurs -->
+    <div class="players-container">
+        <h2>Joueurs</h2>
+        <div id="players">Chargement...</div>
+    </div>
 
-    <script src="script.js"></script>
+    <!-- Section pour les actions des joueurs -->
+    <div class="actions-container">
+        <h2>Historique des actions</h2>
+        <div id="actions">Chargement...</div>
+    </div>
+
+    <!-- Boutons pour exécuter des actions -->
+    <div>
+        <button onclick="playAction('Charles', 'revenu')">Revenu</button>
+        <button onclick="playAction('Charles', 'aide_etrangere')">Aide étrangère</button>
+        <button onclick="playAction('Charles', 'assassinat')">Assassinat</button>
+    </div>
+
 </body>
 </html>
