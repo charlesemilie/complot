@@ -19,3 +19,23 @@ def get_game_status():
 def get_game_actions():
     """Retourne l'historique des actions jouées"""
     return {"actions": action_log}
+
+@app.post("/game/action/{joueur}/{action}")
+def execute_action(joueur: str, action: str):
+    """Exécute une action et l'enregistre dans l'historique"""
+    global action_log  # On s'assure que la variable action_log est accessible
+    message = f"{joueur} a joué l’action {action}"
+    action_log.append(message)
+
+    if action == "revenu":
+        partie.action_revenu(joueur)
+    elif action == "aide_etrangere":
+        partie.action_aide_etrangere(joueur)
+    elif action == "assassinat":
+        return {"message": "Assassinat nécessite une cible"}
+    elif action == "pouvoir":
+        return {"message": "Activation de pouvoir nécessite un personnage"}
+    else:
+        return {"message": "Action inconnue"}
+
+    return {"message": message}
