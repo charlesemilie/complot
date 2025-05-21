@@ -1,6 +1,7 @@
 from typing import Dict, List
 import random
 
+
 # Définition des personnages et leurs pouvoirs
 PERSONNAGES = {
     "Maître-Chanteur": "Prend 3 Or à un adversaire.",
