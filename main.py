@@ -1,20 +1,20 @@
 from fastapi import FastAPI
-
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Configuration CORS pour autoriser le frontend à appeler le backend
+# Configuration CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://complot-frontend.onrender.com"],  # Autorise uniquement ton frontend
+    allow_origins=["https://complot-frontend.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Liste des joueurs actifs
+# Liste des joueurs actifs et tour actuel
 joueurs_actifs = []
+tour_actuel = 0  # Indice du joueur actif
 
 @app.post("/game/join/{pseudo}")
 async def rejoindre_partie(pseudo: str):
@@ -26,6 +26,23 @@ async def rejoindre_partie(pseudo: str):
 async def liste_joueurs():
     return {"joueurs": joueurs_actifs}
 
+@app.post("/game/start")
+async def lancer_partie():
+    global tour_actuel
+    if len(joueurs_actifs) < 2:
+        return {"message": "Il faut au moins 2 joueurs pour commencer la partie"}
+    tour_actuel = 0  # Premier joueur commence
+    return {"message": "La partie commence !", "joueur_actif": joueurs_actifs[tour_actuel]}
+
+@app.get("/game/turn")
+async def tour_en_cours():
+    return {"joueur_actif": joueurs_actifs[tour_actuel]}
+
+@app.post("/game/next_turn")
+async def prochain_tour():
+    global tour_actuel
+    tour_actuel = (tour_actuel + 1) % len(joueurs_actifs)  # Passe au joueur suivant
+    return {"message": f"Tour suivant : {joueurs_actifs[tour_actuel]}", "joueur_actif": joueurs_actifs[tour_actuel]}
 
 from backend.game_logic import Partie
 

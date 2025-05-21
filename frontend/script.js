@@ -90,3 +90,25 @@ async function updatePlayersList() {
 
 // Rafraîchir la liste des joueurs toutes les 5 secondes
 setInterval(updatePlayersList, 5000);
+
+async function startGame() {
+    const response = await fetch("https://complot-backend.onrender.com/game/start", { method: "POST" });
+    const data = await response.json();
+    alert(data.message);
+    updateTurn();
+}
+
+async function updateTurn() {
+    const response = await fetch("https://complot-backend.onrender.com/game/turn");
+    const data = await response.json();
+    document.getElementById("current-turn").textContent = data.joueur_actif;
+}
+
+// Passe au joueur suivant après une action
+async function nextTurn() {
+    const response = await fetch("https://complot-backend.onrender.com/game/next_turn", { method: "POST" });
+    const data = await response.json();
+    document.getElementById("current-turn").textContent = data.joueur_actif;
+}
+
+setInterval(updateTurn, 5000);  // Rafraîchir le tour toutes les 5 secondes

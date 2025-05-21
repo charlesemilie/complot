@@ -11,6 +11,7 @@
         .hidden { display: none; }
         button { margin: 5px; padding: 10px; cursor: pointer; }
         .players-container { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+        .actions-container { margin-top: 20px; padding: 10px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
@@ -32,8 +33,15 @@
             <div id="players-list">Chargement...</div>
         </div>
 
-        <!-- Boutons pour effectuer des actions -->
-        <div>
+        <!-- Bouton pour lancer la partie -->
+        <button id="start-btn" onclick="startGame()">Lancer la partie</button>
+
+        <!-- Tour actuel -->
+        <h2>Tour actuel : <span id="current-turn">En attente...</span></h2>
+
+        <!-- Actions possibles -->
+        <div class="actions-container">
+            <h2>Actions disponibles</h2>
             <button onclick="playAction('revenu')">Revenu</button>
             <button onclick="playAction('aide_etrangere')">Aide étrangère</button>
             <button onclick="playAction('assassinat')">Assassinat</button>
