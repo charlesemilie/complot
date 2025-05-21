@@ -29,9 +29,11 @@ async function fetchGameActions() {
         const response = await fetch("https://complot-backend.onrender.com/game/actions");
         const data = await response.json();
 
+        console.log(data.actions); // Vérifier si les actions sont bien récupérées
+
         // Mettre à jour l'affichage des actions des joueurs
-        const actionsDiv = document.getElementById("actions");
-        actionsDiv.innerHTML = ""; 
+        const actionsDiv = document.getElementById("actions-list"); // Correction ici
+        actionsDiv.innerHTML = ""; // Efface l'affichage précédent
 
         data.actions.forEach(action => {
             const actionElement = document.createElement("p");
@@ -46,3 +48,11 @@ async function fetchGameActions() {
 // Rafraîchir les actions toutes les 5 secondes
 setInterval(fetchGameActions, 5000);
 fetchGameActions(); // Exécuter une première fois au chargement
+
+function playAction(joueur, action) {
+    fetch(`https://complot-backend.onrender.com/game/action/${joueur}/${action}`, {
+        method: "POST"
+    }).then(response => response.json())
+      .then(data => console.log(data.message))
+      .catch(error => console.error("Erreur lors de l'exécution de l'action :", error));
+}
