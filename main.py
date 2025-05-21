@@ -1,4 +1,18 @@
 from fastapi import FastAPI
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# Configuration CORS pour autoriser le frontend à appeler le backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://complot-frontend.onrender.com"],  # Autorise uniquement ton frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 from backend.game_logic import Partie
 
 action_log = []  # Liste des actions jouées
