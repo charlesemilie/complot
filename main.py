@@ -17,7 +17,6 @@ from backend.game_logic import Partie
 
 action_log = []  # Liste des actions jouées
 
-app = FastAPI()
 
 # Initialiser une partie
 partie = Partie(["Charles", "Alice", "Bob"])
