@@ -13,6 +13,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Liste des joueurs actifs
+joueurs_actifs = []
+
+@app.post("/game/join/{pseudo}")
+async def rejoindre_partie(pseudo: str):
+    if pseudo not in joueurs_actifs:
+        joueurs_actifs.append(pseudo)
+    return {"message": f"{pseudo} a rejoint la partie", "joueurs": joueurs_actifs}
+
+@app.get("/game/players")
+async def liste_joueurs():
+    return {"joueurs": joueurs_actifs}
+
+
 from backend.game_logic import Partie
 
 action_log = []  # Liste des actions jouées

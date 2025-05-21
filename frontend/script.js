@@ -56,3 +56,37 @@ function playAction(joueur, action) {
       .then(data => console.log(data.message))
       .catch(error => console.error("Erreur lors de l'exécution de l'action :", error));
 }
+
+async function joinGame() {
+    const pseudo = document.getElementById("player-name").value;
+    if (!pseudo) {
+        alert("Veuillez entrer un pseudo !");
+        return;
+    }
+
+    const response = await fetch(`https://complot-backend.onrender.com/game/join/${pseudo}`, {
+        method: "POST",
+    });
+    const data = await response.json();
+    console.log(data.message);
+
+    document.getElementById("welcome-screen").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+    updatePlayersList();
+}
+
+async function updatePlayersList() {
+    const response = await fetch("https://complot-backend.onrender.com/game/players");
+    const data = await response.json();
+    
+    const playersDiv = document.getElementById("players-list");
+    playersDiv.innerHTML = "";
+    data.joueurs.forEach(joueur => {
+        const p = document.createElement("p");
+        p.textContent = joueur;
+        playersDiv.appendChild(p);
+    });
+}
+
+// Rafraîchir la liste des joueurs toutes les 5 secondes
+setInterval(updatePlayersList, 5000);

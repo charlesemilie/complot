@@ -7,43 +7,44 @@
     <script defer src="script.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        .actions-container, .players-container, .treasury-container {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            display: inline-block;
-            min-width: 300px;
-        }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .hidden { display: none; }
         button { margin: 5px; padding: 10px; cursor: pointer; }
+        .players-container { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
 
-    <h1>Complots 2 Online</h1>
-
-    <!-- Affichage du trésor -->
-    <div class="treasury-container">
-        <h2>Trésor</h2>
-        <p id="treasury">Chargement...</p>
+    <!-- Écran d'accueil pour entrer le pseudo -->
+    <div id="welcome-screen" class="container">
+        <h2>Rejoindre la partie</h2>
+        <input type="text" id="player-name" placeholder="Votre pseudo">
+        <button onclick="joinGame()">Rejoindre</button>
     </div>
 
-    <!-- Affichage des joueurs -->
-    <div class="players-container">
-        <h2>Joueurs</h2>
-        <div id="players">Chargement...</div>
-    </div>
+    <!-- Interface du jeu après identification -->
+    <div id="game-screen" class="container hidden">
+        <h1>Complots 2 Online</h1>
 
-    <!-- Section pour les actions des joueurs -->
-    <div class="actions-container">
-        <h2>Historique des actions</h2>
-        <div id="actions-list">Chargement...</div> <!-- Correction ici -->
-    </div>
+        <!-- Affichage des joueurs en partie -->
+        <div class="players-container">
+            <h2>Joueurs dans la partie</h2>
+            <div id="players-list">Chargement...</div>
+        </div>
 
-    <!-- Boutons pour exécuter des actions -->
-    <div>
-        <button onclick="playAction('Charles', 'revenu')">Revenu</button>
-        <button onclick="playAction('Charles', 'aide_etrangere')">Aide étrangère</button>
-        <button onclick="playAction('Charles', 'assassinat')">Assassinat</button>
+        <!-- Boutons pour effectuer des actions -->
+        <div>
+            <button onclick="playAction('revenu')">Revenu</button>
+            <button onclick="playAction('aide_etrangere')">Aide étrangère</button>
+            <button onclick="playAction('assassinat')">Assassinat</button>
+        </div>
+
+        <!-- Historique des actions -->
+        <div class="actions-container">
+            <h2>Historique des actions</h2>
+            <div id="actions-list">Chargement...</div>
+        </div>
+
     </div>
 
 </body>
