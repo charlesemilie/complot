@@ -5,13 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complots 2 Online</title>
     <script defer src="script.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .hidden { display: none; }
-        button { margin: 5px; padding: 10px; cursor: pointer; }
-        .players-container, .actions-container { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -20,28 +14,23 @@
         <h2>Rejoindre la partie</h2>
         <input type="text" id="player-name" placeholder="Votre pseudo">
         <button onclick="joinGame()">Rejoindre</button>
+        <button id="start-btn" onclick="startGame()">Lancer la partie</button>
     </div>
 
     <!-- Interface du jeu après identification -->
     <div id="game-screen" class="container hidden">
         <h1>Complots 2 Online</h1>
 
-        <!-- Affichage des joueurs en partie -->
-        <div class="players-container">
-            <h2>Joueurs dans la partie</h2>
-            <div id="players-list">Chargement...</div>
+        <!-- Affichage des joueurs en cercle -->
+        <div id="game-circle" class="circle-container">
+            <div class="player-box" id="player-1">Joueur 1</div>
+            <div class="player-box" id="player-2">Joueur 2</div>
+            <div class="player-box" id="player-3">Joueur 3</div>
+            <div class="player-box" id="player-4">Joueur 4</div>
         </div>
 
-        <!-- Bouton pour lancer la partie -->
-        <button id="start-btn" onclick="startGame()">Lancer la partie</button>
-
-        <!-- Tour actuel -->
+        <!-- Affichage du tour -->
         <h2>Tour actuel : <span id="current-turn">En attente...</span></h2>
-
-        <!-- Affichage du trésor -->
-        <div class="players-container">
-            <h2>Trésor : <span id="treasury">0</span> Or</h2>
-        </div>
 
         <!-- Actions possibles -->
         <div class="actions-container">
