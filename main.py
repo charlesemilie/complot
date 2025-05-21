@@ -32,8 +32,8 @@ async def rejoindre_partie(pseudo: str):
 
 @app.get("/game/players")
 async def liste_joueurs():
-    """Renvoie la liste des joueurs actifs."""
-    return {"joueurs": joueurs_actifs}
+    """Renvoie la liste des joueurs actifs avec leur index."""
+    return {"joueurs": {index: pseudo for index, pseudo in enumerate(joueurs_actifs)}}
 
 @app.post("/game/start")
 async def lancer_partie():

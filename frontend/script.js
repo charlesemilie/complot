@@ -86,12 +86,8 @@ async function updatePlayersList() {
     const response = await fetch("https://complot-backend.onrender.com/game/players");
     const data = await response.json();
     
-    const playersDiv = document.getElementById("players-list");
-    playersDiv.innerHTML = "";
-    data.joueurs.forEach(joueur => {
-        const p = document.createElement("p");
-        p.textContent = joueur;
-        playersDiv.appendChild(p);
+    Object.entries(data.joueurs).forEach(([index, pseudo]) => {
+        document.getElementById(`player-${parseInt(index) + 1}`).textContent = pseudo;
     });
 }
 
@@ -113,7 +109,12 @@ async function updateTurn() {
     const response = await fetch("https://complot-backend.onrender.com/game/turn");
     const data = await response.json();
     document.getElementById("current-turn").textContent = data.joueur_actif;
+
+    // Afficher les boutons uniquement pour le joueur actif
+    const currentPlayer = document.getElementById("player-name").value;
+    document.getElementById("actions-container").style.display = (currentPlayer === data.joueur_actif) ? "block" : "none";
 }
+
 
 // Passe au joueur suivant après une action
 async function nextTurn() {
