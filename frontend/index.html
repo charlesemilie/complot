@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complots 2 Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Complots 2 Online</h1>
+    </header>
+
+    <main>
+        <section id="game-status">
+            <h2>État du jeu</h2>
+            <div id="players"></div>
+            <p>Trésor : <span id="treasury">0</span> Or</p>
+        </section>
+
+        <section id="player-actions">
+            <h2>Vos Actions</h2>
+            <button onclick="actionRevenu()">Revenu (+1 Or)</button>
+            <button onclick="actionAideEtrangere()">Aide Étrangère (+2 Or)</button>
+            <button onclick="actionAssassinat()">Assassinat (-7 Or)</button>
+            <button onclick="actionPouvoir()">Activer un Pouvoir</button>
+        </section>
+
+        <section id="chat">
+            <h2>Discussion</h2>
+            <ul id="messages"></ul>
+            <input type="text" id="messageInput" placeholder="Envoyer un message">
+            <button onclick="sendMessage()">Envoyer</button>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
