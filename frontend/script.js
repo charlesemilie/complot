@@ -23,3 +23,26 @@ async function fetchGameStatus() {
 // Rafraîchir l’état du jeu toutes les 5 secondes
 setInterval(fetchGameStatus, 5000);
 fetchGameStatus(); // Exécuter une première fois au chargement
+
+async function fetchGameActions() {
+    try {
+        const response = await fetch("https://complot-backend.onrender.com/game/actions");
+        const data = await response.json();
+
+        // Mettre à jour l'affichage des actions des joueurs
+        const actionsDiv = document.getElementById("actions");
+        actionsDiv.innerHTML = ""; 
+
+        data.actions.forEach(action => {
+            const actionElement = document.createElement("p");
+            actionElement.textContent = action;
+            actionsDiv.appendChild(actionElement);
+        });
+    } catch (error) {
+        console.error("Erreur lors de la récupération des actions :", error);
+    }
+}
+
+// Rafraîchir les actions toutes les 5 secondes
+setInterval(fetchGameActions, 5000);
+fetchGameActions(); // Exécuter une première fois au chargement
