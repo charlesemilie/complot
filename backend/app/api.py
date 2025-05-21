@@ -5,6 +5,7 @@ from .models import PlayerDB, PlayerCreate, Player
 from .game_logic import Game
 from .websocket import manager
 import uuid
+from typing import List
 
 router = APIRouter(prefix="/game")
 
