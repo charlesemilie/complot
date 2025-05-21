@@ -1,64 +1,75 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
+/* Style pour les boutons */
 button {
-    margin: 5px;
-    padding: 10px;
-    cursor: pointer;
+  margin: 5px;
+  padding: 10px;
+  cursor: pointer;
 }
 
 /* Cercle des joueurs */
 .circle-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 400px;
-    height: 400px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    position: relative;
-    margin: auto;
+  position: relative;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  margin: auto;
 }
 
-/* Rectangle des joueurs */
+/* Style pour chaque joueur affiché dans un rectangle */
 .player-box {
-    width: 100px;
-    height: 50px;
-    background-color: #444;
-    color: white;
-    border: 1px solid #fff;
-    text-align: center;
-    line-height: 50px;
-    position: absolute;
+  width: 100px;
+  height: 50px;
+  background-color: #444;
+  color: #fff;
+  border: 1px solid #fff;
+  text-align: center;
+  line-height: 50px;
+  position: absolute;
 }
 
-/* Positionnement des joueurs en cercle */
+/* Positionnement des joueurs dans le cercle (exemple pour 4 joueurs) */
 #player-1 { top: 10px; left: 150px; }
 #player-2 { top: 150px; left: 10px; }
 #player-3 { top: 300px; left: 150px; }
 #player-4 { top: 150px; left: 300px; }
 
-/* Actions du jeu */
-.actions-container {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
+/* Zone pour afficher les cartes sous le pseudo */
+.player-cards {
+  margin-top: 5px;
+  font-size: 0.9em;
 }
 
+/* Popup d'action */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 2px solid #000;
+  padding: 20px;
+  text-align: center;
+  z-index: 100;
+}
 
-.hidden {
-    display: none;
+/* Historique des actions */
+.actions-container {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
 }

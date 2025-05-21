@@ -1,126 +1,103 @@
-async function fetchGameStatus() {
-    try {
-        const response = await fetch("https://complot-backend.onrender.com/game/status");
-        const data = await response.json();
+// Variable globale pour l'utilisateur courant
+let currentUser = "";
 
-        // Mettre à jour l'affichage des joueurs
-        const playersDiv = document.getElementById("players-list");
-        playersDiv.innerHTML = ""; // Effacer l'affichage précédent
-
-        Object.entries(data.joueurs).forEach(([nom, info]) => {
-            const playerInfo = document.createElement("p");
-            playerInfo.textContent = `${nom} - Or: ${info.or}, Cartes: ${info.cartes.join(", ")}`;
-            playersDiv.appendChild(playerInfo);
-        });
-
-        // Mettre à jour le trésor
-        document.getElementById("treasury").textContent = data.tresor;
-
-        // Vérifier si la partie est en cours et basculer sur l'écran de jeu si nécessaire
-        if (data.partie_en_cours) {
-            document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("game-screen").style.display = "block";
-        }
-    } catch (error) {
-        console.error("Erreur lors de la récupération du statut du jeu :", error);
-    }
-}
-
-// Rafraîchir l’état du jeu toutes les 5 secondes
-setInterval(fetchGameStatus, 5000);
-fetchGameStatus(); // Exécuter une première fois au chargement
-
-async function fetchGameActions() {
-    try {
-        const response = await fetch("https://complot-backend.onrender.com/game/actions");
-        const data = await response.json();
-
-        console.log(data.actions); // Vérifier si les actions sont bien récupérées
-
-        // Mettre à jour l'affichage des actions des joueurs
-        const actionsDiv = document.getElementById("actions-list");
-        actionsDiv.innerHTML = ""; // Efface l'affichage précédent
-
-        data.actions.forEach(action => {
-            const actionElement = document.createElement("p");
-            actionElement.textContent = action;
-            actionsDiv.appendChild(actionElement);
-        });
-    } catch (error) {
-        console.error("Erreur lors de la récupération des actions :", error);
-    }
-}
-
-// Rafraîchir les actions toutes les 5 secondes
-setInterval(fetchGameActions, 5000);
-fetchGameActions(); // Exécuter une première fois au chargement
-
-async function playAction(action) {
-    const joueur = document.getElementById("current-turn").textContent; // Récupérer le joueur actif
-    const response = await fetch(`https://complot-backend.onrender.com/game/action/${joueur}/${action}`, {
-        method: "POST"
-    });
-
-    const data = await response.json();
-    alert(data.message);
-    fetchGameActions(); // Rafraîchir l'historique après une action
-}
-
+// Appelée lors du clic sur le bouton "Rejoindre"
 async function joinGame() {
-    const pseudo = document.getElementById("player-name").value;
-    if (!pseudo) {
-        alert("Veuillez entrer un pseudo !");
-        return;
-    }
-
-    const response = await fetch(`https://complot-backend.onrender.com/game/join/${pseudo}`, { method: "POST" });
-    const data = await response.json();
-    console.log(data.message);
-
-    document.getElementById("welcome-screen").style.display = "none";
-    document.getElementById("game-screen").style.display = "block";
-    fetchGameStatus();
+  const pseudo = document.getElementById("player-name").value.trim();
+  if (!pseudo) {
+    alert("Veuillez entrer un pseudo !");
+    return;
+  }
+  currentUser = pseudo;
+  const response = await fetch(`https://complot-backend.onrender.com/game/join/${pseudo}`, {
+    method: "POST"
+  });
+  const data = await response.json();
+  console.log(data.message);
+  // Masquer l'écran d'accueil et afficher l'écran de jeu
+  document.getElementById("welcome-screen").classList.add("hidden");
+  document.getElementById("game-screen").classList.remove("hidden");
+  updatePlayersList();
+  updateTurn();
 }
 
-async function updatePlayersList() {
-    const response = await fetch("https://complot-backend.onrender.com/game/players");
-    const data = await response.json();
-    
-    Object.entries(data.joueurs).forEach(([index, pseudo]) => {
-        document.getElementById(`player-${parseInt(index) + 1}`).textContent = pseudo;
-    });
-}
-
-// Rafraîchir la liste des joueurs toutes les 5 secondes
-setInterval(updatePlayersList, 5000);
-
+// Lance la partie (doit être lancé par un joueur ou un modérateur)
 async function startGame() {
-    const response = await fetch("https://complot-backend.onrender.com/game/start", { method: "POST" });
-    const data = await response.json();
-    
-    if (data.partie_en_cours) {
-        document.getElementById("welcome-screen").style.display = "none";
-        document.getElementById("game-screen").style.display = "block";
+  const response = await fetch("https://complot-backend.onrender.com/game/start", { method: "POST" });
+  const data = await response.json();
+  alert(data.message);
+  updateTurn();
+}
+
+// Met à jour l'affichage des joueurs dans le cercle
+async function updatePlayersList() {
+  const response = await fetch("https://complot-backend.onrender.com/game/status");
+  const data = await response.json();
+  // data.joueurs est un tableau de pseudos, data.cartes est un objet {pseudo: [carte, carte]}
+  data.joueurs.forEach((pseudo, index) => {
+    // Met à jour le pseudo
+    const playerBox = document.getElementById(`player-${index + 1}`);
+    playerBox.querySelector(".player-name").textContent = pseudo;
+    // Pour les cartes, si c'est l'utilisateur connecté, on affiche ses cartes ; sinon on affiche des masques
+    const cardsDiv = document.getElementById(`cards-${index + 1}`);
+    if (pseudo === currentUser) {
+      cardsDiv.textContent = "Cartes : " + data.cartes[pseudo].join(" , ");
+    } else {
+      cardsDiv.textContent = "Cartes : ???";
     }
-    fetchGameStatus();
+  });
 }
 
+// Met à jour l'affichage du joueur dont c'est le tour
 async function updateTurn() {
-    const response = await fetch("https://complot-backend.onrender.com/game/turn");
-    const data = await response.json();
-    document.getElementById("current-turn").textContent = data.joueur_actif;
-
-    // Afficher les boutons uniquement pour le joueur actif
-    const currentPlayer = document.getElementById("player-name").value;
-    document.getElementById("actions-container").style.display = (currentPlayer === data.joueur_actif) ? "block" : "none";
+  const response = await fetch("https://complot-backend.onrender.com/game/turn");
+  const data = await response.json();
+  const tourActuel = data.tour_actuel;
+  document.getElementById("current-turn").textContent = tourActuel;
+  
+  // Affiche le popup d'action uniquement si c'est le tour de l'utilisateur connecté
+  const popup = document.getElementById("action-popup");
+  if (currentUser === tourActuel) {
+    popup.classList.remove("hidden");
+  } else {
+    popup.classList.add("hidden");
+  }
 }
 
-
-// Passe au joueur suivant après une action
-async function nextTurn() {
-    const response = await fetch("https://complot-backend.onrender.com/game/next_turn", { method: "POST" });
-    const data = await response.json();
-    document.getElementById("current-turn").textContent = data.joueur_actif;
+// Gère l'action réalisée par le joueur actif via le popup
+async function playAction(action) {
+  // Appeler l'endpoint d'action
+  const turnResponse = await fetch("https://complot-backend.onrender.com/game/turn");
+  const turnData = await turnResponse.json();
+  const joueurActif = turnData.tour_actuel;
+  
+  // Vérifie que c'est bien le tour du joueur connecté (sécurité côté client)
+  if (currentUser !== joueurActif) {
+    alert("Ce n'est pas votre tour !");
+    return;
+  }
+  
+  await fetch(`https://complot-backend.onrender.com/game/action/${joueurActif}/${action}`, {
+    method: "POST"
+  });
+  
+  // Après l'action, on passe au tour suivant
+  await fetch("https://complot-backend.onrender.com/game/next_turn", { method: "POST" });
+  // Mise à jour de l'affichage
+  updatePlayersList();
+  updateTurn();
+  // Ici, on pourrait aussi rafraîchir l'historique des actions si besoin
+  fetchGameActions();
 }
 
-setInterval(updateTurn, 5000);  // Rafraîchir le tour toutes les 5 secondes
+// (Optionnel) Fonction pour rafraîchir l'historique des actions
+async function fetchGameActions() {
+  const response = await fetch("https://complot-backend.onrender.com/game/status"); // Adapté selon l'endpoint d'actions
+  const data = await response.json();
+  // Mise à jour d'un élément avec l'historique (à implémenter)
+  document.getElementById("actions-list").textContent = "Historique non implémenté pour le moment.";
+}
+
+// Rafraîchit périodiquement l'affichage (toutes les 5 secondes, par exemple)
+setInterval(updatePlayersList, 5000);
+setInterval(updateTurn, 5000);
