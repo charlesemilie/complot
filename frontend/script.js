@@ -4,7 +4,7 @@ async function fetchGameStatus() {
         const data = await response.json();
 
         // Mettre à jour l'affichage des joueurs
-        const playersDiv = document.getElementById("players");
+        const playersDiv = document.getElementById("players-list");
         playersDiv.innerHTML = ""; // Effacer l'affichage précédent
 
         Object.entries(data.joueurs).forEach(([nom, info]) => {
@@ -15,6 +15,12 @@ async function fetchGameStatus() {
 
         // Mettre à jour le trésor
         document.getElementById("treasury").textContent = data.tresor;
+
+        // Vérifier si la partie est en cours et basculer sur l'écran de jeu si nécessaire
+        if (data.partie_en_cours) {
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("game-screen").style.display = "block";
+        }
     } catch (error) {
         console.error("Erreur lors de la récupération du statut du jeu :", error);
     }
@@ -32,7 +38,7 @@ async function fetchGameActions() {
         console.log(data.actions); // Vérifier si les actions sont bien récupérées
 
         // Mettre à jour l'affichage des actions des joueurs
-        const actionsDiv = document.getElementById("actions-list"); // Correction ici
+        const actionsDiv = document.getElementById("actions-list");
         actionsDiv.innerHTML = ""; // Efface l'affichage précédent
 
         data.actions.forEach(action => {
@@ -49,12 +55,15 @@ async function fetchGameActions() {
 setInterval(fetchGameActions, 5000);
 fetchGameActions(); // Exécuter une première fois au chargement
 
-function playAction(joueur, action) {
-    fetch(`https://complot-backend.onrender.com/game/action/${joueur}/${action}`, {
+async function playAction(action) {
+    const joueur = document.getElementById("current-turn").textContent; // Récupérer le joueur actif
+    const response = await fetch(`https://complot-backend.onrender.com/game/action/${joueur}/${action}`, {
         method: "POST"
-    }).then(response => response.json())
-      .then(data => console.log(data.message))
-      .catch(error => console.error("Erreur lors de l'exécution de l'action :", error));
+    });
+
+    const data = await response.json();
+    alert(data.message);
+    fetchGameActions(); // Rafraîchir l'historique après une action
 }
 
 async function joinGame() {
@@ -64,15 +73,13 @@ async function joinGame() {
         return;
     }
 
-    const response = await fetch(`https://complot-backend.onrender.com/game/join/${pseudo}`, {
-        method: "POST",
-    });
+    const response = await fetch(`https://complot-backend.onrender.com/game/join/${pseudo}`, { method: "POST" });
     const data = await response.json();
     console.log(data.message);
 
     document.getElementById("welcome-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
-    updatePlayersList();
+    fetchGameStatus();
 }
 
 async function updatePlayersList() {
@@ -94,8 +101,12 @@ setInterval(updatePlayersList, 5000);
 async function startGame() {
     const response = await fetch("https://complot-backend.onrender.com/game/start", { method: "POST" });
     const data = await response.json();
-    alert(data.message);
-    updateTurn();
+    
+    if (data.partie_en_cours) {
+        document.getElementById("welcome-screen").style.display = "none";
+        document.getElementById("game-screen").style.display = "block";
+    }
+    fetchGameStatus();
 }
 
 async function updateTurn() {

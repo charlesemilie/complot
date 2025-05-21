@@ -10,8 +10,7 @@
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .hidden { display: none; }
         button { margin: 5px; padding: 10px; cursor: pointer; }
-        .players-container { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
-        .actions-container { margin-top: 20px; padding: 10px; border: 1px solid #ddd; }
+        .players-container, .actions-container { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
@@ -38,6 +37,11 @@
 
         <!-- Tour actuel -->
         <h2>Tour actuel : <span id="current-turn">En attente...</span></h2>
+
+        <!-- Affichage du trésor -->
+        <div class="players-container">
+            <h2>Trésor : <span id="treasury">0</span> Or</h2>
+        </div>
 
         <!-- Actions possibles -->
         <div class="actions-container">
